@@ -1,0 +1,57 @@
+apply plugin: 'c'
+apply plugin: 'java'
+apply plugin: 'osgi'
+
+libraries {
+    helloworld {
+
+    }
+}
+
+sources {
+    helloworld {
+        c {
+            exportedHeaders {
+                srcDirs "src/helloworld/headers","$System.env.JAVA_HOME\\include", "$System.env.JAVA_HOME\\include\\win32"
+            }
+        }
+    }
+}
+
+model {
+    platforms {
+        x86 {
+            architecture "x86"
+        }
+        x64 {
+            architecture "x86_64"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+	manifest {
+		instruction 'Bundle-NativeCode', 'lib/x64/helloworld.dll; osname=win32; processor=x86_64'
+		instruction 'Bundle-Activator', 'com.bobpaulin.osgi.dll.Activator'
+	}
+}
+
+dependencies {
+	compile 'org.osgi:org.osgi.core:6.0.0'
+	compile 'org.osgi:org.osgi.compendium:5.0.0'
+}
+
+
+task copyLibrary(type: Copy) {
+    from 'build/binaries/helloworldSharedLibrary/x64/helloworld.dll'
+    into 'src/main/resources/lib/x64'
+}
+
+task generateHeader << {
+	ant.javah(classpath:"build/classes/main", outputfile:"src/helloworld/headers/HelloWorld.h", class:"com.bobpaulin.osgi.dll.HelloWorld")
+}
+

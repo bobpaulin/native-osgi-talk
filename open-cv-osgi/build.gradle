@@ -1,0 +1,31 @@
+apply plugin: 'java'
+apply plugin: 'osgi'
+apply plugin: 'maven'
+group = 'org.opencv'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+//processResources{
+//   from(zipTree("lib/opencv-2410.jar"))
+//}
+
+copy{
+   from(zipTree("lib/opencv-2410.jar"))
+   into("src/main/java")
+}
+
+jar {
+	manifest {
+		instruction 'Bundle-NativeCode', 'lib/x64/opencv_java2410.dll; osname=win32; processor=x86_64'
+		instruction 'Bundle-Activator', 'org.opencv.Activator'
+		//attributes('Export-Package': 'org.opencv,org.opencv.core,org.opencv.calib3d,org.opencv.contrib,org.opencv.features2d,org.opencv.;uses:="org.osgi.framework"')
+	}
+}
+
+dependencies {
+	compile 'org.osgi:org.osgi.core:6.0.0'
+	compile 'org.osgi:org.osgi.compendium:5.0.0'
+}
