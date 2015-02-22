@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'osgi'
+apply plugin: 'maven'
+group = 'com.bobpaulin.opencv'
+version = '0.0.1'
+
+repositories {
+	mavenLocal()
+    mavenCentral()
+}
+
+jar {
+	manifest {
+		instruction 'Bundle-Activator', 'com.bobpaulin.opencv.Activator'
+	}
+}
+
+dependencies {
+	compile 'org.osgi:org.osgi.core:6.0.0'
+	compile 'org.osgi:org.osgi.compendium:5.0.0'
+	compile 'org.opencv:open-cv-osgi:0.0.1'
+}
